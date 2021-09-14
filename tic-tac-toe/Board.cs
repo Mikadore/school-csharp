@@ -103,5 +103,21 @@ namespace tic_tac_toe
                 });
             });
         }
+
+        public bool IsFull()
+        {
+            foreach (var tile in this.state)
+            {
+                if (tile == Tile.Unnocupied)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        public bool IsDraw()
+        {
+            return (!DetermineWinner(Tile.Nought) && !DetermineWinner(Tile.Cross)) && IsFull();
+        }
     }
 }
