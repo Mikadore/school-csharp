@@ -13,38 +13,33 @@ namespace tic_tac_toe
 
     class Board
     {
-        private Tile[,] state;
+        // Implementing dimensionality manually,
+        // Because md arrays have bad library support.
+        private Tile[] state;
 
         public Board()
         {
-            this.state = new Tile[3, 3];
-            // It makes me sad there is no 
-            // sane way to Fill a 2d array.
-            for (var y = 0; y < 3; y++)
-            {
-                for (var x = 0; x < 3; x++)
-                {
-                    this.state[x, y] = Tile.Unnocupied;
-                }
-            }
+            this.state = new Tile[3 * 3];
+            Array.Fill(this.state, Tile.Unnocupied);
         }
 
         public Tile this[uint x, uint y]
         {
-            get { return this.state[x, y]; }
-            set { state[x, y] = value; }
+            get { return this.state[x + y * 3]; }
+            set { this.state[x + y * 3] = value; }
         }
 
+        // Ugly, imperative code.
         public String Render()
         {
             var builder = new System.Text.StringBuilder();
             builder.AppendLine("+-+-+-+");
-            for (var y = 0; y < state.GetLength(0); y++)
+            for (var y = 0u; y < 3; y++)
             {
                 builder.Append('|');
-                for (var x = 0; x < state.GetLength(1); x++)
+                for (var x = 0u; x < 3; x++)
                 {
-                    var ch = this.state[x, y] switch
+                    var ch = this[x, y] switch
                     {
                         Tile.Nought => '0',
                         Tile.Cross => 'X',
@@ -74,7 +69,7 @@ namespace tic_tac_toe
                 throw new System.Exception("AI move out of range");
             }
 
-            this.state[x, y] = ai.Type();
+            this[x, y] = ai.Type();
         }
 
         // Return whether the given Tile type has won        
@@ -94,10 +89,12 @@ namespace tic_tac_toe
                 new[] { (2u,0u), (1u,1u), (0u,2u) },
             };
 
-            return winning_series.Any(s => {
-                return s.All(pos => {
-                    var (x,y) = pos;
-                    return this.state[x,y] == type;
+            return winning_series.Any(s =>
+            {
+                return s.All(pos =>
+                {
+                    var (x, y) = pos;
+                    return this[x, y] == type;
                 });
             });
         }
