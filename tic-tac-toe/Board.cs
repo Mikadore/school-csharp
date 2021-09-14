@@ -68,6 +68,11 @@ namespace tic_tac_toe
             {
                 throw new System.Exception("AI move out of range");
             }
+            
+            if (this[x, y] != Tile.Unnocupied)
+            {
+                throw new System.Exception("Bug: AI's move has already been played");
+            }
 
             this[x, y] = ai.Type();
         }
