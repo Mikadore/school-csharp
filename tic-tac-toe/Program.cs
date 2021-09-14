@@ -115,7 +115,7 @@ namespace tic_tac_toe
 
             if (!confirmation("Do you want to go first? [y/n]: "))
             {
-                board.AIMove(AI);
+                board.PlayAI(AI);
             }
 
             while (true)
@@ -125,23 +125,23 @@ namespace tic_tac_toe
                 while (true)
                 {
                     Console.Write("Please enter the X coordinate of your move (1-3): ");
-                    var x = GetNumRange(1, 3) - 1;
+                    var p_x = GetNumRange(1, 3) - 1;
 
                     Console.Write("Please enter the Y coordinate of your move (1-3): ");
-                    var y = GetNumRange(1, 3) - 1;
+                    var p_y = GetNumRange(1, 3) - 1;
 
-                    if (board[x, y] != Tile.Unnocupied)
+                    if (board[p_x, p_y] != Tile.Unnocupied)
                     {
                         Console.WriteLine("This move has been played before! Please try again.");
                     }
                     else
                     {
-                        board[x, y] = player_tile;
+                        board.PlayMove(p_x, p_y, player_tile);
                         break;
                     }
                 }
 
-                board.AIMove(AI);
+                board.PlayAI(AI);
 
                 if (board.DetermineWinner(player_tile))
                 {

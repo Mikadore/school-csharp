@@ -60,10 +60,19 @@ namespace tic_tac_toe
             Console.WriteLine(this.Render());
         }
 
-        public void AIMove(TicTacToeAI ai)
+        public void PlayAI(TicTacToeAI ai)
         {
             var (x, y) = ai.move(this);
+            PlayMove(x, y, ai.Type());
+        }
 
+        public void PlayMove(uint x, uint y, Tile color)
+        {
+            if (color == Tile.Unnocupied)
+            {
+                throw new System.Exception("Invalid Tile color");
+            } 
+            
             if (x > 2 || y > 2)
             {
                 throw new System.Exception("AI move out of range");
@@ -74,7 +83,7 @@ namespace tic_tac_toe
                 throw new System.Exception("Bug: AI's move has already been played");
             }
 
-            this[x, y] = ai.Type();
+            this[x, y] = color;
         }
 
         // Return whether the given Tile type has won        
@@ -118,6 +127,19 @@ namespace tic_tac_toe
         public bool IsDraw()
         {
             return (!DetermineWinner(Tile.Nought) && !DetermineWinner(Tile.Cross)) && IsFull();
+        }
+
+        public Board SimulateMove(uint x, uint y, Tile color)
+        {
+            var copy = new Board();
+            this.state.CopyTo(copy.state, 0);
+            copy.PlayMove(x, y, color); 
+            return copy;
+        }
+
+        public Tile[] AsArray()
+        {
+            return this.state;
         }
     }
 }
